@@ -28641,6 +28641,17 @@ const Mail = createLucideIcon("Mail", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const Menu = createLucideIcon("Menu", [
+  ["line", { x1: "4", x2: "20", y1: "12", y2: "12", key: "1e0a9i" }],
+  ["line", { x1: "4", x2: "20", y1: "6", y2: "6", key: "1owob3" }],
+  ["line", { x1: "4", x2: "20", y1: "18", y2: "18", key: "yk5zj1" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const MessageCircle = createLucideIcon("MessageCircle", [
   ["path", { d: "M7.9 20A9 9 0 1 0 4 16.1L2 22Z", key: "vv11sd" }]
 ]);
@@ -28957,11 +28968,13 @@ function App() {
   const [appVersion, setAppVersion] = reactExports.useState("");
   const [passwordRecovery, setPasswordRecovery] = reactExports.useState(null);
   const [startupReady, setStartupReady] = reactExports.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = reactExports.useState(false);
   reactExports.useEffect(() => {
     catalogRef.current = catalog;
   }, [catalog]);
   reactExports.useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    setMobileMenuOpen(false);
   }, [page]);
   reactExports.useEffect(() => {
     void window.pxgg.getAppVersion().then(setAppVersion).catch(() => void 0);
@@ -29232,6 +29245,7 @@ function App() {
     }
   };
   const navigate = (next) => {
+    setMobileMenuOpen(false);
     if (next === "Admin") {
       if (account?.role !== "admin") {
         setNotice("A área de administração está reservada ao administrador.");
@@ -29304,8 +29318,12 @@ function App() {
   if (session && account && deviceState !== "trusted") return /* @__PURE__ */ jsxRuntimeExports.jsx(DeviceAccessScreen, { error: deviceError, onAuthorize: authorizeDevice, onLogout: () => void logout(), appearance, onToggleAppearance: () => void toggleAppearance(), appearanceReady: prefsLoaded });
   if (!session || !account) return /* @__PURE__ */ jsxRuntimeExports.jsx(LoginScreen, { notice, onLogin: finishLogin, appearance, onToggleAppearance: () => void toggleAppearance(), appearanceReady: prefsLoaded });
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "app-shell", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: "sidebar", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "brand", onClick: () => setPage("Home"), "aria-label": "PXGG Hub, início", children: [
+    mobileMenuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sidebar-backdrop", onClick: () => setMobileMenuOpen(false) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: `sidebar ${mobileMenuOpen ? "mobile-open" : ""}`, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "brand", onClick: () => {
+        setPage("Home");
+        setMobileMenuOpen(false);
+      }, "aria-label": "PXGG Hub, início", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(BrandSymbol, {}),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "brand-name", children: [
           "PXGG",
@@ -29358,19 +29376,24 @@ function App() {
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "main-area", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "topbar", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "breadcrumb", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "PXGG Hub" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "slash", children: "/" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: page === "Home" ? "Início" : page === "Config" ? "Definições" : page === "Downloads" ? "Transferências" : page === "SteamGames" ? "Jogos Steam" : page === "AgentsAI" ? "Agents AI" : page })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "topbar-left", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "mobile-menu-btn", onClick: () => setMobileMenuOpen((prev) => !prev), "aria-label": "Abrir menu de navegação", children: mobileMenuOpen ? /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 20 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { size: 20 }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "breadcrumb", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "PXGG Hub" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "slash", children: "/" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: page === "Home" ? "Início" : page === "Config" ? "Definições" : page === "Downloads" ? "Transferências" : page === "SteamGames" ? "Jogos Steam" : page === "AgentsAI" ? "Agents AI" : page })
+          ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "top-actions", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "status-pill status-pill-online", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "status-dot-pulse" }),
-            " Biblioteca privada"
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "pill-text", children: "Biblioteca privada" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "status-pill status-pill-latency", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Wifi, { size: 13 }),
-            " Online"
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "pill-text", children: "Online" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "icon-button", title: "Ajuda", onClick: () => setNotice(`PXGG Hub v${appVersion || "0.1.54"} — Para suporte ou pedidos de jogos, contacta o administrador.`), children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleHelp, { size: 17 }) })
         ] })
@@ -29452,6 +29475,28 @@ function App() {
       notice,
       " ",
       /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 14 })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "mobile-bottom-nav", "aria-label": "Navegação móvel", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: `mobile-nav-btn ${page === "Home" ? "active" : ""}`, onClick: () => navigate("Home"), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(House, { size: 20 }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Início" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: `mobile-nav-btn ${page === "Games" ? "active" : ""}`, onClick: () => navigate("Games"), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Gamepad2, { size: 20 }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Jogos" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: `mobile-nav-btn ${page === "Movies" ? "active" : ""}`, onClick: () => navigate("Movies"), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Clapperboard, { size: 20 }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Filmes" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: `mobile-nav-btn ${page === "Mods" ? "active" : ""}`, onClick: () => navigate("Mods"), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(PackageOpen, { size: 20 }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Mods" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: `mobile-nav-btn ${mobileMenuOpen ? "active" : ""}`, onClick: () => setMobileMenuOpen((prev) => !prev), children: [
+        mobileMenuOpen ? /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 20 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { size: 20 }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Menu" })
+      ] })
     ] })
   ] });
 }
@@ -31462,7 +31507,7 @@ if (!window.pxgg) {
     },
     onCatalogNotificationClick: () => () => {
     },
-    getUpdateState: async () => ({ status: "latest", version: "0.1.54-mobile" }),
+    getUpdateState: async () => ({ status: "not-available", version: "0.1.54-mobile" }),
     startupUpdateCheck: async () => ({ proceed: true }),
     checkForUpdates: async () => {
     },
