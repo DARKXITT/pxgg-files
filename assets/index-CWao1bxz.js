@@ -28969,6 +28969,19 @@ function App() {
   const [passwordRecovery, setPasswordRecovery] = reactExports.useState(null);
   const [startupReady, setStartupReady] = reactExports.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = reactExports.useState(false);
+  const [isMobile, setIsMobile] = reactExports.useState(() => {
+    if (typeof window !== "undefined") {
+      return !navigator.userAgent.includes("Electron") && window.innerWidth <= 768;
+    }
+    return false;
+  });
+  reactExports.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(!navigator.userAgent.includes("Electron") && window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   reactExports.useEffect(() => {
     catalogRef.current = catalog;
   }, [catalog]);
@@ -29317,12 +29330,12 @@ function App() {
   if (session && account && needsKey) return /* @__PURE__ */ jsxRuntimeExports.jsx(ActivationScreen, { onActivate: activateAccount, onLogout: () => void logout(), appearance, onToggleAppearance: () => void toggleAppearance(), appearanceReady: prefsLoaded });
   if (session && account && deviceState !== "trusted") return /* @__PURE__ */ jsxRuntimeExports.jsx(DeviceAccessScreen, { error: deviceError, onAuthorize: authorizeDevice, onLogout: () => void logout(), appearance, onToggleAppearance: () => void toggleAppearance(), appearanceReady: prefsLoaded });
   if (!session || !account) return /* @__PURE__ */ jsxRuntimeExports.jsx(LoginScreen, { notice, onLogin: finishLogin, appearance, onToggleAppearance: () => void toggleAppearance(), appearanceReady: prefsLoaded });
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "app-shell", children: [
-    mobileMenuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sidebar-backdrop", onClick: () => setMobileMenuOpen(false) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: `sidebar ${mobileMenuOpen ? "mobile-open" : ""}`, children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `app-shell ${isMobile ? "is-mobile" : "is-desktop"}`, children: [
+    isMobile && mobileMenuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sidebar-backdrop", onClick: () => setMobileMenuOpen(false) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: `sidebar ${isMobile && mobileMenuOpen ? "mobile-open" : ""}`, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "brand", onClick: () => {
         setPage("Home");
-        setMobileMenuOpen(false);
+        if (isMobile) setMobileMenuOpen(false);
       }, "aria-label": "PXGG Hub, início", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(BrandSymbol, {}),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "brand-name", children: [
@@ -29377,7 +29390,7 @@ function App() {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "main-area", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "topbar", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "topbar-left", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "mobile-menu-btn", onClick: () => setMobileMenuOpen((prev) => !prev), "aria-label": "Abrir menu de navegação", children: mobileMenuOpen ? /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 20 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { size: 20 }) }),
+          isMobile && /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "mobile-menu-btn", onClick: () => setMobileMenuOpen((prev) => !prev), "aria-label": "Abrir menu de navegação", children: mobileMenuOpen ? /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 20 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { size: 20 }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "breadcrumb", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "PXGG Hub" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "slash", children: "/" }),
@@ -29476,7 +29489,7 @@ function App() {
       " ",
       /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 14 })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "mobile-bottom-nav", "aria-label": "Navegação móvel", children: [
+    isMobile && /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "mobile-bottom-nav", "aria-label": "Navegação móvel", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: `mobile-nav-btn ${page === "Home" ? "active" : ""}`, onClick: () => navigate("Home"), children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(House, { size: 20 }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Início" })
@@ -30068,59 +30081,22 @@ function AppearanceToggle({ appearance, onToggle, disabled = false }) {
   ] });
 }
 function AuthFrame({ eyebrow, title, description, foot, appearance, onToggleAppearance, appearanceReady, children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "login-screen auth-screen", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-shell", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: "auth-brand-panel", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-brand-top", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(BrandSymbol, {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-            "PXGG ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("small", { children: "STUDIOS" })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-art", "aria-hidden": "true", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("i", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("i", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("i", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: "PX" })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-brand-copy", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "auth-overline", children: "O TEU HUB DE JOGO" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { children: [
-            "Mais perto",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-            "da tua crew",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "." })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Uma biblioteca privada para os teus jogos, mods e correções." })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-brand-footer", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("i", {}),
-            " ACESSO PROTEGIDO"
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "PXGG HUB · DESKTOP" })
-        ] })
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "login-screen", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "login-card", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "login-brand", style: { textAlign: "center", marginBottom: 20 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrandSymbol, {}) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "eyebrow", style: { justifyContent: "center", marginBottom: 8 }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "kicker-line" }),
+        " ",
+        eyebrow
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "auth-form-panel", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-form-content", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-form-heading", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "auth-eyebrow", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("i", {}),
-              " ",
-              eyebrow
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: title }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: description })
-          ] }),
-          children,
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "auth-form-foot", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { size: 14 }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: foot })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "auth-form-version", children: "PXGG HUB · 0.1.54" })
-      ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { textAlign: "center" }, children: title }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "login-subtitle", style: { textAlign: "center" }, children: description }),
+      children,
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "login-foot", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { size: 14, style: { display: "inline", verticalAlign: "middle", marginRight: 6 } }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: foot })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center", marginTop: 14, fontSize: 10, color: "#777783", fontFamily: "var(--mono)" }, children: "PXGG HUB · 0.1.54" })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AppearanceToggle, { appearance, onToggle: onToggleAppearance, disabled: !appearanceReady })
   ] });
