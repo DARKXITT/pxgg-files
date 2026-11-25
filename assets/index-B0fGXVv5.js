@@ -30083,20 +30083,20 @@ function AppearanceToggle({ appearance, onToggle, disabled = false }) {
 function AuthFrame({ eyebrow, title, description, foot, appearance, onToggleAppearance, appearanceReady, children }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "login-screen", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "login-card", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "login-brand", style: { textAlign: "center", marginBottom: 20 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrandSymbol, {}) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "eyebrow", style: { justifyContent: "center", marginBottom: 8 }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "login-brand", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrandSymbol, {}) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "eyebrow login-eyebrow", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "kicker-line" }),
         " ",
         eyebrow
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { style: { textAlign: "center" }, children: title }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "login-subtitle", style: { textAlign: "center" }, children: description }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "login-title", children: title }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "login-subtitle", children: description }),
       children,
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "login-foot", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { size: 14, style: { display: "inline", verticalAlign: "middle", marginRight: 6 } }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { size: 14 }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: foot })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { textAlign: "center", marginTop: 14, fontSize: 10, color: "#777783", fontFamily: "var(--mono)" }, children: "PXGG HUB · 0.1.54" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "login-version", children: "PXGG HUB · 0.1.54" })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AppearanceToggle, { appearance, onToggle: onToggleAppearance, disabled: !appearanceReady })
   ] });
